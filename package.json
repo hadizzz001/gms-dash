@@ -1,0 +1,47 @@
+{
+  "name": "next-crash-course",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "npx prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "@prisma/client": "^5.6.0",
+    "autoprefixer": "10.4.14",
+    "axios": "^1.6.0",
+    "cloudinary": "^1.41.0",
+    "cookie": "^0.5.0",
+    "heroicons": "^2.0.18",
+    "jquery": "^3.7.1",
+    "jsonwebtoken": "^9.0.2",
+    "next": "13.4.6",
+    "next-client-cookies": "^1.0.6",
+    "next-cloudinary": "^4.28.0",
+    "postcss": "8.4.24",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-query": "^3.39.3",
+    "tailwindcss": "3.3.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.5.3",
+    "@types/jquery": "^3.5.25",
+    "@types/jsonwebtoken": "^9.0.4",
+    "@types/node": "20.8.9",
+    "@types/react": "18.2.33",
+    "prisma": "^5.6.0",
+    "typescript": "5.2.2"
+  }, 
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
+  }
+}
