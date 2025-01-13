@@ -10,10 +10,15 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.0.18",
+    "@mui/material": "^6.3.1",
     "@prisma/client": "^5.6.0",
+    "@uploadcare/react-widget": "^2.4.7",
     "autoprefixer": "10.4.14",
     "axios": "^1.6.0",
+    "bootstrap": "^5.3.3",
     "cloudinary": "^1.41.0",
     "cookie": "^0.5.0",
     "heroicons": "^2.0.18",
@@ -27,6 +32,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-query": "^3.39.3",
+    "react-quill": "^2.0.0",
     "tailwindcss": "3.3.2",
     "uuid": "^9.0.1"
   },
@@ -38,7 +44,7 @@
     "@types/react": "18.2.33",
     "prisma": "^5.6.0",
     "typescript": "5.2.2"
-  }, 
+  },
   "browser": {
     "fs": false,
     "os": false,

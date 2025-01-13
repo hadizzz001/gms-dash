@@ -1,48 +1,56 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-
 import Modal from "./Modal";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import UploadPDF from './../components/UploadPDF'
+import Dropzone from './Dropzone'
+import { useState, useEffect } from "react";
 
 const Post = ({ post }) => {
-  const router = useRouter(); 
+  const router = useRouter();
+
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [postToEdit, setPostToEdit] = useState(post);
-  const [postToEdit1, setPostToEdit1] = useState();
   const [active, setActive] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false); 
+  const [active1, setActive1] = useState(false)
+  const [firstSelectValue, setFirstSelectValue] = useState('');
+  const [secondSelectValue, setSecondSelectValue] = useState('');
+  const [secondSelectOptions, setSecondSelectOptions] = useState([]);
+  const [value1, setValue1] = useState('');
+  const [imgs, setImgs] = useState([''])
+
   const [openModalDelete, setOpenModalDelete] = useState(false);
-  const [openModalDelete1, setOpenModalDelete1] = useState(false);
-  const [pdfid, setPdf] = useState(); 
 
   const handleEditSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
 
-    if (e.target.type.value == "0") {
-      alert("Please fill insurance type");
-    }
-    else {
-      setActive(true)
-      axios
-        .patch(`/api/posts/${post.id}`, postToEdit)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setOpenModalEdit(false);
-          setActive(false)
-          window.location.replace("/dashboard");
-        });
-    }
+    setActive(true)
+    axios
+      .patch(`/api/posts/${post.id}`, postToEdit)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setOpenModalEdit(false);
+        setActive(false)
+        window.location.replace("/dashboard");
+      });
+
   };
 
   const handleChange = (e) => {
+    if (e.target.name == "price") { 
+      // Allow digits and one dot
+      const numericValue = e.target.value.replace(/[^0-9.]/g, '');
+      // Ensure only one dot is allowed
+      const validNumericValue = numericValue.includes('.')
+        ? numericValue.split('.').slice(0, 2).join('.')
+        : numericValue;
+      setValue1(validNumericValue);
+    }
     const name = e.target.name;
     const value = e.target.value;
     setPostToEdit((prevState) => ({ ...prevState, [name]: value }));
@@ -64,28 +72,71 @@ const Post = ({ post }) => {
   }
 
 
+  const handleImgChange = (url) => {
+    if (url) {
+      setImgs(url);
+    }
+  }
+
+
+  const handleFirstSelectChange = (event) => {
+    const selectedValue = event.target.value;
+    setFirstSelectValue(selectedValue);
+    setActive1(true)
+    const optionsForSecondSelect = getOptionsForSecondSelect(selectedValue);
+    setSecondSelectOptions(optionsForSecondSelect); 
+    setSecondSelectValue(optionsForSecondSelect[0]);
+  };
+
+  const getOptionsForSecondSelect = (firstSelectValue) => {
+    switch (firstSelectValue) {
+      case 'Appliances':
+        return ['--Choose Type--', 'Home Appliances', 'Outdoor Appliances', 'Office Appliances', 'Miscellaneous Appliances'];
+      case 'Fashion':
+        return ['--Choose Type--', 'Men Wear', 'Women Wear', 'Baby Wear'];
+      case 'Household':
+        return ['--Choose Type--', 'Furniture', 'Home Supplies'];
+      case 'Picnic Items':
+        return ['--Choose Type--', 'Picnic Supplies'];
+      default:
+        return [];
+    }
+  };
+
+
 
   useEffect(() => { 
-    axios
-      .patch(`/api/posts/${pdfid}`, postToEdit1)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setOpenModalDelete1(false); 
-      });
-  }, [postToEdit1, pdfid]);
+    if (firstSelectValue){ 
+      setPostToEdit((prevState) => ({ ...prevState, category: "" + firstSelectValue }));
+    } 
+  }, [firstSelectValue])
 
 
-  const handleDeletePost1 = (id) => {
-    setPdf(id)
-    setPostToEdit1({
-      pdf: ""
-    })
-  }
+
+  useEffect(() => { 
+    if (secondSelectValue){ 
+      setPostToEdit((prevState) => ({ ...prevState, type: "" + secondSelectValue }));
+    } 
+  }, [secondSelectValue])
+
+
+
+  useEffect(() => { 
+    if (!(imgs.includes(""))){ 
+      setPostToEdit((prevState) => ({ ...prevState, img: imgs }));
+    } 
+  }, [imgs])
+
+
+ 
+
+
+
+
+
+
+
+
 
 
 
@@ -95,11 +146,14 @@ const Post = ({ post }) => {
 
 
   return (
-    <li className="p-3 my-5 bg-slate-200" key={post.id}>
-      <h1 className="text-2xl font-bold">{post.title}</h1>
-      <b>{post.type}</b>
-      <p>{post.description}</p>
+    <div className="bg-slate-200 p-3 min-h-full min-w-full" key={post.id}>
+      <h1 className="text-2xl font-bold">Title : {post.title}</h1>
+      <b>Category : {post.category}</b><br />
+      <b>Type : {post.type}</b><br />
+      <b>Price($) : {post.price}</b><br />
+      <p style={{ width: "150px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{post.description}</p><br />
 
+      <img src={post.img[0]} width={50} />
 
       <div className="pt-5">
         <button
@@ -110,10 +164,11 @@ const Post = ({ post }) => {
         </button>
 
 
-
         <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit}>
-          <form className="w-full" onSubmit={handleEditSubmit}>
-            <h1 className="text-2xl pb-3">Edit Service</h1>
+
+
+
+          <form className="w-full mt-3" onSubmit={handleEditSubmit}>
 
             <input
               type="text"
@@ -125,23 +180,55 @@ const Post = ({ post }) => {
               required
             />
 
-            <input
-              type="text"
+            <textarea
               placeholder="Description"
               name="description"
-              className="w-full p-2 my-5"
+              className="w-full p-2 my-3"
               value={postToEdit.description || ""}
               onChange={handleChange}
               required
             />
 
-            <select name="type" id="type" onChange={handleChange} required>
-              <option value="0" disabled selected>--Choose Option--</option>
-              <option value="business">Business Insurance</option>
-              <option value="personal">Personal Insurance</option>
+            <input
+              type="text"
+              placeholder="Price"
+              name="price"
+              className="w-full p-2 my-3"
+              value={postToEdit.price || value1}
+              onChange={handleChange}
+              required
+            />
+
+
+
+<select name="category" value={firstSelectValue} onChange={handleFirstSelectChange} style={{ width: "100%", height: "40px" }}  >
+              <option value="0" selected>--Choose Category--</option>
+              <option value="Appliances">Appliances</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Household">Household</option>
+              <option value="Picnic Items">Picnic Items</option>
             </select>
 
-            <button type="submit" className="bg-blue-700 text-white px-5 py-2" disabled={active}>
+            <br />
+
+
+            {active1 && ( 
+              <select value={secondSelectValue} onChange={(event) => setSecondSelectValue(event.target.value)} style={{ width: "100%", height: "40px" }} className="mt-3">
+                {secondSelectOptions.map((option) => (
+                  <option
+                    key={option}
+                    value={option}
+                  >
+                    {option}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <Dropzone HandleImagesChange={handleImgChange} className='mt-10 border border-neutral-200 p-16' />
+
+
+            <button type="submit" className="px-5 py-2 mt-3" style={{ background: "#ab695d" }} disabled={active}>
               Submit
             </button>
           </form>
@@ -159,7 +246,7 @@ const Post = ({ post }) => {
               onClick={() => handleDeletePost(post.id)}
               className="text-blue-700 font-bold mr-5"
             >
-              Yes
+              YES
             </button>
             <button
               onClick={() => setOpenModalDelete(false)}
@@ -171,44 +258,13 @@ const Post = ({ post }) => {
         </Modal>
 
 
-        <button
-          style={{ float: "inline-end" }}
-          onClick={() => setModalOpen(true)}
-          className="text-blue-700 mr-3"
-        >
-          Add PDF
-        </button>
-        <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-          <UploadPDF postid={post.id} />
-        </Modal>
 
 
-        <button onClick={() => setOpenModalDelete1(true)} className="text-red-700 mr-3" style={{ float: "inline-end" }}>Delete PDF</button>
 
-        <Modal modalOpen={openModalDelete1} setModalOpen={setOpenModalDelete1}>
-          <h1 className="text-2xl pb-3">
-            Are you sure, You want to delete PDF of this post?
-          </h1>
-
-          <div>
-            <button
-              onClick={() => handleDeletePost1(post.id)}
-              className="text-blue-700 font-bold mr-5"
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => setOpenModalDelete1(false)}
-              className="text-red-700 font-bold mr-5"
-            >
-              No
-            </button>
-          </div>
-        </Modal>
 
 
       </div>
-    </li>
+    </div>
   );
 };
 

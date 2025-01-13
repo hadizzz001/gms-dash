@@ -4,9 +4,34 @@
 
 
 a{
- color:#6c3429 !important
+ color:#ab695d !important
 }
 
 a:hover{
     text-decoration: none !important;
 }
+
+
+
+
+
+@media only screen and (max-width: 600px) {
+    #contentMob {
+        text-align: center;
+        display: contents;
+    }
+
+    table{
+        font-size: small;
+    }
+
+    .imageMob{
+        width: 40%;
+        height: auto;
+    }
+
+    tr{
+        font-size:xx-small
+    }
+
+  }
