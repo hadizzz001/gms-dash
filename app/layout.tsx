@@ -64,6 +64,16 @@ export default function RootLayout({
                 </a>
               </li> 
               <li className="nav-item">
+                <a href="/home" className="nav-link text-white">
+                  Home Section
+                </a>
+              </li> 
+              <li className="nav-item">
+                <a href="/reservation" className="nav-link text-white">
+                  Orders
+                </a>
+              </li> 
+              <li className="nav-item">
                 <a href="/" className="nav-link text-white">
                   logout
                 </a>

@@ -30,3 +30,32 @@ model Brand {
   name String   @unique 
   img  String[]
 }
+
+
+model homeB {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String   
+  desc String    
+  img  String[]
+}
+
+model homeA {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId 
+  desc String     
+}
+
+
+model homeS {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String   
+  desc String    
+  img  String[]
+  link String
+}
+
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userInfo  Json
+  cartItems Json
+}
