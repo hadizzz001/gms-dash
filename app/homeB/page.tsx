@@ -9,8 +9,8 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const ManageCategory = () => {
-  const [formData, setFormData] = useState({ name: '', desc: '', img: [] });
-  const [editFormData, setEditFormData] = useState({ id: '', name: '', desc: '', img: [] });
+  const [formData, setFormData] = useState({ name: '', desc: '', img: [] ,link:'' });
+  const [editFormData, setEditFormData] = useState({ id: '', name: '', desc: '', img: [],link:'' });
   const [description, setDescription] = useState(''); // State for ReactQuill
   const [message, setMessage] = useState('');
   const [categories, setCategories] = useState([]);
@@ -48,8 +48,8 @@ const ManageCategory = () => {
     });
 
     if (res.ok) {
-      setMessage('Banner added successfully!');
-      setFormData({ name: '', desc: '', img: [] });
+      setMessage('home banner added successfully!');
+      setFormData({ name: '', desc: '', img: [],link:'' });
       setDescription('');
       fetchCategories();
       window.location.href = '/homeB';
@@ -67,6 +67,7 @@ const ManageCategory = () => {
       name: category.name,
       desc: category.desc,
       img: category.img,
+      link: category.link,
     });
     setDescription(category.desc); // Populate Quill editor
     setImg(category.img); // Populate img state with existing images for editing
@@ -82,13 +83,14 @@ const ManageCategory = () => {
         body: JSON.stringify({
           name: editFormData.name,
           desc: description, // Send updated Quill content
-          img: img, // Ensure the updated image state is sent
+          img: img,
+          link:editFormData.link,
         }),
       });
 
       if (res.ok) {
         window.location.reload();
-        setEditFormData({ id: '', name: '', desc: '', img: [] });
+        setEditFormData({ id: '', name: '', desc: '', img: [], link:'' });
         setEditMode(false);
         setDescription('');
         fetchCategories();
@@ -104,13 +106,13 @@ const ManageCategory = () => {
 
   // Delete category
   const handleDelete = async (id) => {
-    if (confirm(`Are you sure you want to delete this home banner?`)) {
+    if (confirm(`Are you sure you want to delete this home home banner?`)) {
       try {
         const res = await fetch(`/api/homeB?id=${encodeURIComponent(id)}`, {
           method: 'DELETE',
         });
         if (res.ok) {
-          setMessage('Home banner deleted successfully!');
+          setMessage('Home home banner deleted successfully!');
           fetchCategories();
           redirect('/homeB');
         } else {
@@ -137,7 +139,7 @@ const ManageCategory = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{editMode ? 'Edit Banner' : 'Add Banner'}</h1>
+      <h1 className="text-2xl font-bold mb-4">{editMode ? 'Edit home banner' : 'Add home banner'}</h1>
       <form onSubmit={editMode ? handleEditSubmit : handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-1">Name</label>
@@ -163,6 +165,19 @@ const ManageCategory = () => {
           />
         </div>
 
+        <label className="block mb-1">Link</label>
+          <input
+            type="text"
+            className="border p-2 w-full"
+            value={editMode ? editFormData.link : formData.link}
+            onChange={(e) =>
+              editMode
+                ? setEditFormData({ ...editFormData, link: e.target.value })
+                : setFormData({ ...formData, link: e.target.value })
+            }
+            required
+          />
+
         <style
         dangerouslySetInnerHTML={{
           __html:
@@ -172,12 +187,12 @@ const ManageCategory = () => {
 
         <Dropzone HandleImagesChange={handleImgChange} />
         <button type="submit" className="bg-blue-500 text-white px-4 py-2">
-          {editMode ? 'Update Banner' : 'Add Banner'}
+          {editMode ? 'Update home banner' : 'Add home banner'}
         </button>
       </form>
       {message && <p className="mt-4">{message}</p>}
 
-      <h2 className="text-xl font-bold mt-8">All Banners</h2>
+      <h2 className="text-xl font-bold mt-8">All home banners</h2>
       <table className="table-auto border-collapse border border-gray-300 w-full mt-4">
         <thead>
           <tr>
@@ -212,7 +227,7 @@ const ManageCategory = () => {
             ))
           ) : (
             <tr>
-              <td className="border border-gray-300 p-2 text-center">No banners found.</td>
+              <td className="border border-gray-300 p-2 text-center">No home banners found.</td>
             </tr>
           )}
         </tbody>

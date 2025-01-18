@@ -37,6 +37,7 @@ model homeB {
   name String   
   desc String    
   img  String[]
+  link String
 }
 
 model homeA {
