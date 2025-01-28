@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Dropzone from '../components/Dropzone';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; 
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function ProductTable() {
   const [products, setProducts] = useState([]);
@@ -194,6 +198,7 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price); 
   const [img, setImg] = useState(product.img || []);
+  const [description, setDescription] = useState(product.description);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -201,6 +206,7 @@ function EditProductForm({ product, onCancel, onSave }) {
       ...product,
       title,
       price, 
+      description,
       img
     });
   };
@@ -242,6 +248,15 @@ function EditProductForm({ product, onCancel, onSave }) {
           required
         />
       </div>
+
+      <label className="block text-lg font-bold mb-2">Description</label>
+      <ReactQuill
+        value={description}
+        onChange={setDescription}
+        className="mb-4"
+        theme="snow"
+        placeholder="Write your product description here..."
+      />
  
 
       <style

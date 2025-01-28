@@ -8,7 +8,8 @@ export async function PATCH(request, { params }) {
   const {
     title, 
     price, 
-    img
+    img,
+    description
   } = await request.json();
 
   try {
@@ -18,7 +19,8 @@ export async function PATCH(request, { params }) {
       data: {
         title, 
         price, 
-        img
+        img,
+        description
       },
     });
 
