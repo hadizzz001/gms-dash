@@ -77,8 +77,8 @@ export default function Home() {
             {/* Left column container with background*/}
             <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
               <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12" id="contentMob">
-                <img
-                  src="https://ucarecdn.com/f3eebafc-fc8d-4343-8216-c92ce1f82962/logowhite.png"
+                <img 
+                  src="api/proxy?url=https://ucarecdn.com/f3eebafc-fc8d-4343-8216-c92ce1f82962/logowhite.png"
                   className="w-50"
                   alt="Sample image"
                 />
