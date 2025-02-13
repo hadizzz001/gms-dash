@@ -6,10 +6,12 @@ const prisma = new PrismaClient();
 export async function PATCH(request, { params }) {
   const { id } = params;
   const {
-    title, 
-    price, 
+    title,
+    price,
     img,
-    description
+    description,
+    category,
+    brand,
   } = await request.json();
 
   try {
@@ -17,10 +19,12 @@ export async function PATCH(request, { params }) {
     const updatedProduct = await prisma.product.update({
       where: { id },
       data: {
-        title, 
-        price, 
+        title,
+        price,
         img,
-        description
+        description,
+        category,
+        brand,
       },
     });
 
@@ -39,7 +43,7 @@ export async function DELETE(request, { params }) {
   const { id } = params;
 
   try {
- 
+
 
     // Delete the product
     await prisma.product.delete({
