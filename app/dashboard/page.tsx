@@ -199,6 +199,7 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [title, setTitle] = useState(product.title);
   const [img, setImg] = useState(product.img || []);
   const [description, setDescription] = useState(product.description);
+  const [price, setPrice] = useState(product.price);
 
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]); 
@@ -235,6 +236,7 @@ function EditProductForm({ product, onCancel, onSave }) {
       title,
       description,
       img,
+      price,
       category: selectedCategory,
       brand: selectedBrand, 
     });
@@ -339,6 +341,26 @@ function EditProductForm({ product, onCancel, onSave }) {
         theme="snow"
         placeholder="Write your product description here..."
       />
+
+
+
+
+
+<label htmlFor="price" className="block text-sm font-medium text-gray-700">
+          Price
+        </label>
+        <input
+          id="price"
+          type="text"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className="w-full border p-2"
+          placeholder="Price"
+          required
+        />
+
+
+
 
       {/* Image Dropzone */}
       <style
